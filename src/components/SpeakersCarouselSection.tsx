@@ -282,7 +282,7 @@ export function SpeakersCarouselSection() {
         >
           {SPEAKERS.map((speaker: Speaker, index: number) => {
             // Circular offset relative to active card
-            let diff = index - activeIndex;
+            const diff = index - activeIndex;
             let offset = ((diff % N) + N) % N;
             if (offset > N / 2) offset -= N;
 

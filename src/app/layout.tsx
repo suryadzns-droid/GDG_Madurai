@@ -33,16 +33,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Display:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
         <link rel="icon" href="/images/GDG_Logo.png" />
       </head>
       <body className="antialiased min-h-screen bg-white text-[#202124] selection:bg-[#4285F4]/20 selection:text-[#202124]">

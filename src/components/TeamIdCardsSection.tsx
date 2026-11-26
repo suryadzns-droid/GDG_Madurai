@@ -65,12 +65,12 @@ export function TeamIdCardsSection() {
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const cardBodiesRef = useRef<Matter.Body[]>([]);
-  const anchorsRef = useRef<{ x: number; y: number }[]>(
+  const [anchors, setAnchors] = useState<{ x: number; y: number }[]>(() =>
     TEAM_MEMBERS.map((_, i) => ({ x: 180 + i * 280, y: -35 }))
   );
-  const lanyardLengthsRef = useRef<number[]>([185, 195, 180, 200]);
+  const [lanyardLengths, setLanyardLengths] = useState<number[]>([185, 195, 180, 200]);
   const animFrameIdRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(performance.now());
+  const startTimeRef = useRef<number>(0);
 
   // Dragging interaction state
   const dragInfoRef = useRef<{
@@ -210,8 +210,8 @@ export function TeamIdCardsSection() {
     }
 
     cardBodiesRef.current = cardBodies;
-    anchorsRef.current = anchors;
-    lanyardLengthsRef.current = lanyardLengths;
+    setAnchors(anchors);
+    setLanyardLengths(lanyardLengths);
 
     // Invisible boundary floor to prevent cards from dropping infinitely
     const ground = Bodies.rectangle(layout.stageWidth / 2, layout.stageHeight + 200, layout.stageWidth * 2, 100, {
@@ -229,14 +229,9 @@ export function TeamIdCardsSection() {
       }))
     );
 
-    let lastTime = performance.now();
-
     // Physics update step
     const updatePhysics = (currentTime: number) => {
       animFrameIdRef.current = requestAnimationFrame(updatePhysics);
-
-      const delta = Math.min(currentTime - lastTime, 33); // clamp to max 30Hz step to prevent tunneling
-      lastTime = currentTime;
 
       const activeDrag = dragInfoRef.current;
       const timeSinceMount = currentTime - startTimeRef.current;
@@ -660,7 +655,7 @@ export function TeamIdCardsSection() {
             </defs>
 
             {TEAM_MEMBERS.map((member, i) => {
-              const anchor = anchorsRef.current[i] || { x: (i + 1) * 220, y: -35 };
+              const anchor = anchors[i] || { x: (i + 1) * 220, y: -35 };
               const cardState = cardStates[i] || { x: anchor.x, y: 320, angle: 0 };
               const { cardH, isMobile } = dimensions;
 
@@ -675,7 +670,7 @@ export function TeamIdCardsSection() {
               const dx = clipX - anchor.x;
               const dy = clipY - anchor.y;
               const dist = Math.sqrt(dx * dx + dy * dy);
-              const maxL = lanyardLengthsRef.current[i] || 180;
+              const maxL = lanyardLengths[i] || 180;
               const slack = Math.max(0, maxL - dist);
 
               // Sag curve droop when card is lifted up
